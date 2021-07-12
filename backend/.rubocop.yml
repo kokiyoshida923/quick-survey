@@ -8,6 +8,7 @@ AllCops:
     - "bin/*"
     - "config/environments/*"
     - "config/*"
+    - "db/schema.rb"
     - "spec/*_helper.rb"
     - "vendor/**/*"
     - "config.ru"
