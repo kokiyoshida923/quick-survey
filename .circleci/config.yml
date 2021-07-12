@@ -1,0 +1,91 @@
+version: 2.1
+
+executors:
+  backend:
+    docker:
+      - image: circleci/ruby:2.7.3-node-browsers
+        environment:
+          BUNDLE_JOBS: 3
+          BUNDLE_RETRY: 3
+          RAILS_ENV: test
+          DB_USERNAME: quick_survey_user
+          DB_PASSWORD: password
+          DB_HOST: 127.0.0.1
+      - image: circleci/mysql:5.7.33
+        environment:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: backend_test
+          MYSQL_USER: quick_survey_user
+          MYSQL_PASSWORD: password
+
+commands:
+  bundle-install:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "./backend/Gemfile.lock" }}
+            - v1-dependencies-
+      - run:
+          name: Bundle Install
+          command: |
+            bundle config set path "./vendor/bundle"
+            bundle check || bundle install
+          working_directory: ./backend/
+      - save_cache:
+          paths:
+            - ./backend/vendor/bundle
+          key: v1-dependencies-{{ checksum "./backend/Gemfile.lock" }}
+
+jobs:
+  rubocop-check:
+    executor: backend
+    steps:
+      - checkout
+      - bundle-install
+      - run:
+          name: Rubocop Checks
+          command: |
+            mkdir -p /tmp/rubocop-results
+            bundle exec rubocop \
+              . \
+              --out /tmp/rubocop-results/check-results.xml \
+              --format progress
+          working_directory: ./backend/
+  rspec-test:
+    executor: backend
+    steps:
+      - checkout
+      - bundle-install
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+          working_directory: ./backend/
+      - run:
+          name: Database setup
+          command: bundle exec rails db:schema:load --trace
+          working_directory: ./backend/
+      - run:
+          name: RSpec Tests
+          command: |
+            mkdir -p /tmp/test-results/rspec
+            TESTFILES=$(circleci tests glob "spec/**/*_spec.rb" | \
+              circleci tests split --split-by=timings)
+            bundle exec rspec \
+              $TESTFILES \
+              --profile 10 \
+              --format RspecJunitFormatter \
+              --out /tmp/test-results/rspec/results.xml \
+              --format progress
+          working_directory: ./backend/
+      - store_test_results:
+          path: ./backend/tmp/test-results/rspec
+      - store_artifacts:
+          path: ./backend/tmp/test-results/rspec
+          destination: test-results
+
+workflows:
+  version: 2
+  workflows:
+    jobs:
+      - rubocop-check
+      - rspec-test
