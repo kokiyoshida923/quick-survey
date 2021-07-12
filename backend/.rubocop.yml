@@ -1,0 +1,32 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.7
+  Exclude:
+    - "app/mailers/*"
+    - "bin/*"
+    - "config/environments/*"
+    - "config/*"
+    - "spec/*_helper.rb"
+    - "vendor/**/*"
+    - "config.ru"
+    - "Gemfile"
+    - "Rakefile"
+
+# Style
+Style/Documentation:
+  Enabled: false
+# https://docs.rubocop.org/rubocop/1.17/cops_style.html#styledocumentation
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+# https://docs.rubocop.org/rubocop/1.17/cops_style.html#stylefrozenstringliteralcomment
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+# https://docs.rubocop.org/rubocop/1.17/cops_style.html#stylestringliterals
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+# https://docs.rubocop.org/rubocop/1.17/cops_style.html#stylesymbolarray
