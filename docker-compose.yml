@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  back:
+    build: ./backend
+    command: /bin/bash -c "rm -rf tmp/pids/server.pid; bundle exec rails s -p 3000 -b 0.0.0.0"
+    ports:
+      - "3000:3000"
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./backend:/app/backend
+      - bundle:/usr/local/bundle
+    depends_on:
+      - db
+  db:
+    build: ./db
+    ports:
+      - "3306:3306"
+    env_file:
+      - ./db/.env
+    volumes:
+      - db_data:/var/lib/mysql
+  front:
+    build: ./frontend
+    command: /bin/bash -c "HOST=0 PORT=8000 npm run dev"
+    ports:
+      - "8000:8000"
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./frontend:/app/frontend
+volumes:
+  bundle:
+  db_data:
