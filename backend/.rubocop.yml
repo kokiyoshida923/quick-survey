@@ -15,6 +15,12 @@ AllCops:
     - "Gemfile"
     - "Rakefile"
 
+# Lint
+Lint/EmptyBlock:
+  Exclude: ["spec/**/*"]
+# https://docs.rubocop.org/rubocop/1.17/cops_lint.html#lintemptyblock
+
+
 # Style
 Style/Documentation:
   Enabled: false
