@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  mount_uploader :avatar, AvatarUploader
+
   validates :name,  presence: true,
                     length: { maximum: 20, minimum: 6, allow_blank: true }
 
