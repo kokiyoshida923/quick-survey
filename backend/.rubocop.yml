@@ -21,6 +21,12 @@ Lint/EmptyBlock:
 # https://docs.rubocop.org/rubocop/1.17/cops_lint.html#lintemptyblock
 
 
+# Metrics
+Metrics/BlockLength:
+    Exclude: ["spec/**/*"]
+# https://docs.rubocop.org/rubocop/1.17/cops_metrics.html#metricsblocklength
+
+
 # Style
 Style/Documentation:
   Enabled: false
