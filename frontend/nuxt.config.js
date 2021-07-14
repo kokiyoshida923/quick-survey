@@ -43,6 +43,13 @@ export default {
     '@nuxtjs/axios',
   ],
 
+  publicRuntimeConfig: {
+    axios: {
+      browserBaseURL:
+        process.env.NODE_ENV === 'production' ? '' : 'http://localhost:3000',
+    },
+  },
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
 
