@@ -15,6 +15,7 @@ module.exports = {
   plugins: [],
   // add your custom rules here
   rules: {
+    'object-shorthand': ['error', 'never'],
     'vue/v-bind-style': ['error', 'longform'],
   },
 }
