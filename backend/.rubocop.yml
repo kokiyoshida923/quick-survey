@@ -20,6 +20,10 @@ Lint/EmptyBlock:
   Exclude: ["spec/**/*"]
 # https://docs.rubocop.org/rubocop/1.17/cops_lint.html#lintemptyblock
 
+Lint/UnusedMethodArgument:
+  Exclude: ["app/uploaders/*_uploader.rb"]
+# https://docs.rubocop.org/rubocop/1.17/cops_lint.html#lintunusedmethodargument
+
 
 # Metrics
 Metrics/BlockLength:
