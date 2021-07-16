@@ -16,9 +16,7 @@
       </v-row>
     </v-app-bar>
     <v-main>
-      <v-container fluid>
-        <nuxt />
-      </v-container>
+      <nuxt />
     </v-main>
     <v-footer class="grey darken-4" app>
       <v-row no-gutters>
