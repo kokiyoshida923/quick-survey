@@ -17,5 +17,12 @@ module.exports = {
   rules: {
     'object-shorthand': ['error', 'never'],
     'vue/v-bind-style': ['error', 'longform'],
+    'vue/v-on-style': ['error', 'longform'],
+    'vue/v-slot-style': [
+      'error',
+      {
+        named: 'longform',
+      },
+    ],
   },
 }

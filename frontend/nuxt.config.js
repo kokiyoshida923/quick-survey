@@ -58,6 +58,7 @@ export default {
     customVariables: [
       '~/assets/variables.scss',
       '~/assets/variables/breakpoints.scss',
+      '~/assets/variables/v-label.scss',
     ],
     treeShake: true,
     optionsPath: './vuetify.options.js',
