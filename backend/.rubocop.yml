@@ -32,6 +32,10 @@ Metrics/BlockLength:
 
 
 # Style
+Style/BlockDelimiters:
+    Exclude: ["spec/**/*"]
+# https://docs.rubocop.org/rubocop/1.17/cops_style.html#styleblockdelimiters
+
 Style/Documentation:
   Enabled: false
 # https://docs.rubocop.org/rubocop/1.17/cops_style.html#styledocumentation
