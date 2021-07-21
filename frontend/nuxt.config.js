@@ -50,6 +50,10 @@ export default {
     },
   },
 
+  router: {
+    middleware: 'authentication',
+  },
+
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     credentials: true,

@@ -2,26 +2,32 @@
   <v-app>
     <v-app-bar class="grey darken-4" app>
       <v-row no-gutters>
-        <v-col class="d-flex justify-space-between align-center" cols="12">
+        <v-col cols="12">
           <v-card
-            class="
-              grey
-              darken-4
-              grey--text
-              text--lighten-4
-              font-weight-bold
-              text-decoration-none
-            "
-            v-bind:class="[
-              $vuetify.breakpoint.smAndDown
-                ? 'text-subtitle-2'
-                : 'text-subtitle-1',
-            ]"
+            class="d-flex justify-space-between align-center grey darken-4"
             flat
           >
-            quick survey
+            <div
+              class="
+                pa-0
+                grey--text
+                text--lighten-4
+                font-weight-bold
+                text-decoration-none
+              "
+              v-bind:class="[
+                $vuetify.breakpoint.smAndDown
+                  ? 'text-subtitle-2'
+                  : 'text-subtitle-1',
+              ]"
+            >
+              quick survey
+            </div>
+            <UnauthenticatedHeaderItem
+              v-if="$store.state.auth.isAuthenticated === false"
+            ></UnauthenticatedHeaderItem>
+            <AuthenticatedHeaderItem v-else></AuthenticatedHeaderItem>
           </v-card>
-          <UnauthenticatedHeaderItem></UnauthenticatedHeaderItem>
         </v-col>
       </v-row>
     </v-app-bar>
