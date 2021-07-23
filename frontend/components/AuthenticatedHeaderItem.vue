@@ -49,6 +49,17 @@
             ></v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
+        <v-divider class="my-3"></v-divider>
+        <v-list-item v-on:click="logoutUser()">
+          <v-list-item-icon>
+            <v-icon v-text="authenticatedHeaderLogout.icon"></v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title
+              v-text="authenticatedHeaderLogout.title"
+            ></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-menu>
   </v-card>
@@ -56,6 +67,14 @@
 
 <script>
 export default {
+  data: function () {
+    return {
+      authenticatedHeaderLogout: {
+        title: 'ログアウト',
+        icon: 'mdi-logout',
+      },
+    }
+  },
   computed: {
     authUser: function () {
       return this.$store.state.auth.authUser
@@ -69,6 +88,25 @@ export default {
           icon: 'mdi-account',
         },
       ]
+    },
+  },
+  methods: {
+    logoutUser: async function () {
+      try {
+        await this.$axios.$delete('/api/v1/logout')
+        this.$store.dispatch('message/flashMessage', {
+          isAlert: true,
+          alertType: 'success',
+          alertMessage: 'ログアウトに成功しました',
+        })
+        this.$router.push('/')
+      } catch (e) {
+        this.$store.dispatch('message/flashMessage', {
+          isAlert: true,
+          alertType: 'warning',
+          alertMessage: 'サーバーとの通信にエラーが発生しています',
+        })
+      }
     },
   },
 }

@@ -59,4 +59,34 @@ RSpec.describe "Sessions", type: :request do
       end
     end
   end
+
+  describe "'/logout'にDELETEメソッドでリクエストを送信した場合" do
+    let!(:user) { FactoryBot.create(:user) }
+    it "ステータスコード204 (no content) が返されること" do
+      post "/api/v1/login", params: { session: {
+        email: user.email,
+        password: user.password
+      } }
+      delete "/api/v1/logout"
+      expect(response.status).to eq 204
+    end
+    it "cookieに格納されている一時的な暗号化済みのユーザーIDが削除されること" do
+      post "/api/v1/login", params: { session: {
+        email: user.email,
+        password: user.password
+      } }
+      delete "/api/v1/logout"
+      expect(session[:user_id].blank?).to be_truthy
+    end
+    it "ユーザーがログイン中の場合にのみログアウトできること" do
+      post "/api/v1/login", params: { session: {
+        email: user.email,
+        password: user.password
+      } }
+      delete "/api/v1/logout"
+      expect(session[:user_id].blank?).to be_truthy
+      delete "/api/v1/logout"
+      expect(response.status).to eq 204
+    end
+  end
 end
