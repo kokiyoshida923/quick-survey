@@ -26,6 +26,13 @@ module Api
         end
       end
 
+      def destroy
+        return unless @current_user
+
+        session.delete(:user_id)
+        @current_user = nil
+      end
+
       private
 
       def session_params
