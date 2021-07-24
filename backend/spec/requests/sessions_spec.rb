@@ -1,6 +1,49 @@
 require "rails_helper"
 
 RSpec.describe "Sessions", type: :request do
+  describe "'/verification'にGETメソッドでリクエストを送信" do
+    context "ユーザーがログインしていない場合" do
+      it "ステータスコード200 (ok) が返されること" do
+        get "/api/v1/verification"
+        expect(response.status).to eq 200
+      end
+      it "未認証状態を表す論理値がJSON形式で返されること" do
+        get "/api/v1/verification"
+        json = JSON.parse(response.body)
+        expect(json["is_authenticated"]).to eq false
+      end
+    end
+    context "ユーザーがログインしている場合" do
+      let!(:user) { FactoryBot.create(:user) }
+      it "ステータスコード200 (ok) が返されること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password
+        } }
+        get "/api/v1/verification"
+        expect(response.status).to eq 200
+      end
+      it "既認証状態を表す論理値がJSON形式で返されること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password
+        } }
+        get "/api/v1/verification"
+        json = JSON.parse(response.body)
+        expect(json["is_authenticated"]).to eq true
+      end
+      it "既認証ユーザーがJSON形式で返されること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password
+        } }
+        get "/api/v1/verification"
+        json = JSON.parse(response.body)
+        expect(json["auth_user"]["id"]).to eq(user.id)
+      end
+    end
+  end
+
   describe "'/login'にGETメソッドでリクエストを送信した場合" do
     it "ステータスコード200 (ok) が返されること" do
       get "/api/v1/login"
