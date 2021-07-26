@@ -5,29 +5,29 @@ RSpec.describe Session, type: :model do
     context "メールアドレスが存在する場合" do
       let!(:user) { FactoryBot.create(:user) }
       it "メールアドレスが有効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user)
-        expect(unauthenticated_user).to be_valid
+        unauth_user = FactoryBot.build(:unauth_user)
+        expect(unauth_user).to be_valid
       end
     end
     context "メールアドレスが空文字の場合" do
       it "メールアドレスが無効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user, email: "")
-        expect(unauthenticated_user).to be_invalid
-        expect(unauthenticated_user.errors.full_messages).to include("メールアドレスを入力してください")
+        unauth_user = FactoryBot.build(:unauth_user, email: "")
+        expect(unauth_user).to be_invalid
+        expect(unauth_user.errors.full_messages).to include("メールアドレスを入力してください")
       end
     end
     context "メールアドレスが空白文字の場合" do
       it "メールアドレスが無効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user, email: " ")
-        expect(unauthenticated_user).to be_invalid
-        expect(unauthenticated_user.errors.full_messages).to include("メールアドレスを入力してください")
+        unauth_user = FactoryBot.build(:unauth_user, email: " ")
+        expect(unauth_user).to be_invalid
+        expect(unauth_user.errors.full_messages).to include("メールアドレスを入力してください")
       end
     end
     context "メールアドレスがnilの場合" do
       it "メールアドレスが無効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user, email: nil)
-        expect(unauthenticated_user).to be_invalid
-        expect(unauthenticated_user.errors.full_messages).to include("メールアドレスを入力してください")
+        unauth_user = FactoryBot.build(:unauth_user, email: nil)
+        expect(unauth_user).to be_invalid
+        expect(unauth_user.errors.full_messages).to include("メールアドレスを入力してください")
       end
     end
   end
@@ -36,29 +36,29 @@ RSpec.describe Session, type: :model do
     context "パスワードが存在する場合" do
       let!(:user) { FactoryBot.create(:user) }
       it "パスワードが有効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user)
-        expect(unauthenticated_user).to be_valid
+        unauth_user = FactoryBot.build(:unauth_user)
+        expect(unauth_user).to be_valid
       end
     end
     context "パスワードが空文字の場合" do
       it "パスワードが無効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user, password: "")
-        expect(unauthenticated_user).to be_invalid
-        expect(unauthenticated_user.errors.full_messages).to include("パスワードを入力してください")
+        unauth_user = FactoryBot.build(:unauth_user, password: "")
+        expect(unauth_user).to be_invalid
+        expect(unauth_user.errors.full_messages).to include("パスワードを入力してください")
       end
     end
     context "パスワードが空白文字の場合" do
       it "パスワードが無効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user, password: " ")
-        expect(unauthenticated_user).to be_invalid
-        expect(unauthenticated_user.errors.full_messages).to include("パスワードを入力してください")
+        unauth_user = FactoryBot.build(:unauth_user, password: " ")
+        expect(unauth_user).to be_invalid
+        expect(unauth_user.errors.full_messages).to include("パスワードを入力してください")
       end
     end
     context "パスワードがnilの場合" do
       it "パスワードが無効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user, password: nil)
-        expect(unauthenticated_user).to be_invalid
-        expect(unauthenticated_user.errors.full_messages).to include("パスワードを入力してください")
+        unauth_user = FactoryBot.build(:unauth_user, password: nil)
+        expect(unauth_user).to be_invalid
+        expect(unauth_user.errors.full_messages).to include("パスワードを入力してください")
       end
     end
   end
@@ -67,15 +67,15 @@ RSpec.describe Session, type: :model do
     let!(:user) { FactoryBot.create(:user) }
     context "メールアドレスがusersテーブルの任意のレコードと照合するとき" do
       it "メールアドレスが有効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user)
-        expect(unauthenticated_user).to be_valid
+        unauth_user = FactoryBot.build(:unauth_user)
+        expect(unauth_user).to be_valid
       end
     end
     context "メールアドレスがusersテーブルの任意のレコードと照合しないとき" do
       it "メールアドレスが無効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user, email: user.email.sub(/@/, "_"))
-        expect(unauthenticated_user).to be_invalid
-        expect(unauthenticated_user.errors.full_messages).to include("メールアドレスは正しくありません")
+        unauth_user = FactoryBot.build(:unauth_user, email: user.email.sub(/@/, "_"))
+        expect(unauth_user).to be_invalid
+        expect(unauth_user.errors.full_messages).to include("メールアドレスは正しくありません")
       end
     end
   end
@@ -84,22 +84,22 @@ RSpec.describe Session, type: :model do
     let!(:user) { FactoryBot.create(:user) }
     context "メールアドレスがusersテーブルの任意のレコードと照合するかつ、パスワードがそのレコードの暗号化されたパスワードと照合するとき" do
       it "パスワードが有効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user)
-        expect(unauthenticated_user).to be_valid
+        unauth_user = FactoryBot.build(:unauth_user)
+        expect(unauth_user).to be_valid
       end
     end
     context "メールアドレスがusersテーブルの任意のレコードと照合しないとき" do
       it "パスワードが無効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user, email: user.email.sub(/@/, "_"))
-        expect(unauthenticated_user).to be_invalid
-        expect(unauthenticated_user.errors.full_messages).to include("パスワードは正しくありません")
+        unauth_user = FactoryBot.build(:unauth_user, email: user.email.sub(/@/, "_"))
+        expect(unauth_user).to be_invalid
+        expect(unauth_user.errors.full_messages).to include("パスワードは正しくありません")
       end
     end
     context "メールアドレスがusersテーブルの任意のレコードと照合するかつ、パスワードがそのレコードの暗号化されたパスワードと照合しないとき" do
       it "パスワードが無効であること" do
-        unauthenticated_user = FactoryBot.build(:unauthenticated_user, password: user.password.chop)
-        expect(unauthenticated_user).to be_invalid
-        expect(unauthenticated_user.errors.full_messages).to include("パスワードは正しくありません")
+        unauth_user = FactoryBot.build(:unauth_user, password: user.password.chop)
+        expect(unauth_user).to be_invalid
+        expect(unauth_user.errors.full_messages).to include("パスワードは正しくありません")
       end
     end
   end
