@@ -1,32 +1,32 @@
 require "rails_helper"
 
 RSpec.describe "Users", type: :request do
-  describe "'/users/:id'にGETメソッドでリクエストを送信した場合" do
+  describe "'/users/:id'にGETメソッドでリクエストを送信" do
     let!(:user) { FactoryBot.create(:user) }
     it "ステータスコード200 (ok) が返されること" do
       get "/api/v1/users/#{user.id}"
       expect(response.status).to eq 200
     end
-    it "パラメータに対応するユーザーがJSON形式で返されること" do
+    it "ルーティングのパラメータに対応するユーザーがJSON形式で返されること" do
       get "/api/v1/users/#{user.id}"
       json = JSON.parse(response.body)
       expect(json["user"]["id"]).to eq(user.id)
     end
   end
 
-  describe "'/signup'にGETメソッドでリクエストを送信した場合" do
+  describe "'/signup'にGETメソッドでリクエストを送信" do
     it "ステータスコード200 (ok) が返されること" do
       get "/api/v1/signup"
       expect(response.status).to eq 200
     end
-    it "新規ユーザーがJSON形式で返されること" do
+    it "未登録ユーザーがJSON形式で返されること" do
       get "/api/v1/signup"
       json = JSON.parse(response.body)
       expect(json["user"]["id"]).to eq(nil)
     end
   end
 
-  describe "'/signup'にPOSTメソッドでリクエストを送信した場合" do
+  describe "'/signup'にPOSTメソッドでリクエストを送信" do
     context "パラメータが妥当な場合" do
       before do
         @valid_name = Faker::Internet.username(specifier: 6..20, separators: %w[. _ -])
@@ -47,7 +47,7 @@ RSpec.describe "Users", type: :request do
         } }
         expect(response.status).to eq 200
       end
-      it "作成されたユーザーがJSON形式で返されること" do
+      it "既登録ユーザーがJSON形式で返されること" do
         post "/api/v1/signup", params: { user: {
           name: @valid_name,
           email: @valid_email,
