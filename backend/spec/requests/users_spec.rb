@@ -27,16 +27,12 @@ RSpec.describe "Users", type: :request do
   end
 
   describe "'/signup'にPOSTメソッドでリクエストを送信" do
+    let!(:user) { FactoryBot.build(:user) }
     context "パラメータが妥当な場合" do
       before do
-        @valid_name = Faker::Internet.username(specifier: 6..20, separators: %w[. _ -])
-        @valid_email = Faker::Internet.email(domain: "valid")
-        @valid_password = Faker::Internet.password(
-          min_length: 8,
-          max_length: 32,
-          mix_case: true,
-          special_characters: false
-        )
+        @valid_name = user.name
+        @valid_email = user.email
+        @valid_password = user.password
       end
       it "ステータスコード200 (ok) が返されること" do
         post "/api/v1/signup", params: { user: {
@@ -70,12 +66,9 @@ RSpec.describe "Users", type: :request do
     end
     context "パラメータが不当な場合" do
       before do
-        @invalid_name = Faker::Internet.username(specifier: [(1..5), 21].sample)
-        @invalid_email = Faker::Internet.email(domain: "invalid").gsub("@", "")
-        @invalid_password = [
-          Faker::Alphanumeric.alpha(number: 7),
-          Faker::Alphanumeric.alpha(number: 33)
-        ].sample
+        @invalid_name = user.name.split(/\s/).first
+        @invalid_email = user.email.sub(/@/, "_")
+        @invalid_password = user.password.chop
       end
       it "ステータスコード200 (ok) が返されること" do
         post "/api/v1/signup", params: { user: {
