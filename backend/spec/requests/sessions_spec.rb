@@ -58,44 +58,52 @@ RSpec.describe "Sessions", type: :request do
   end
 
   describe "'/login'にPOSTメソッドでリクエストを送信" do
+    let!(:unauth_user) { FactoryBot.build(:unauth_user) }
     context "パラメータが妥当な場合" do
       let!(:user) { FactoryBot.create(:user) }
+      before do
+        @valid_email = unauth_user.email
+        @valid_password = unauth_user.password
+      end
       it "ステータスコード200 (ok) が返されること" do
         post "/api/v1/login", params: { session: {
-          email: user.email,
-          password: user.password
+          email: @valid_email,
+          password: @valid_password
         } }
         expect(response.status).to eq 200
       end
       it "cookieに一時的な暗号化済みのユーザーIDが生成されること" do
         post "/api/v1/login", params: { session: {
-          email: user.email,
-          password: user.password
+          email: @valid_email,
+          password: @valid_password
         } }
         expect(session[:user_id].nil?).to be_falsey
       end
       it "既認証ユーザーがJSON形式で返されること" do
         post "/api/v1/login", params: { session: {
-          email: user.email,
-          password: user.password
+          email: @valid_email,
+          password: @valid_password
         } }
         json = JSON.parse(response.body)
         expect(json["auth_user"]["id"]).to eq(user.id)
       end
     end
     context "パラメータが不当な場合" do
-      let!(:user) { FactoryBot.create(:user) }
+      before do
+        @invalid_email = unauth_user.email.sub(/@/, "_")
+        @invalid_password = unauth_user.password.chop
+      end
       it "ステータスコード200 (ok) が返されること" do
         post "/api/v1/login", params: { session: {
-          email: user.email.sub(/@/, "_"),
-          password: user.password.chop
+          email: @invalid_email,
+          password: @invalid_password
         } }
         expect(response.status).to eq 200
       end
       it "エラーメッセージがJSON形式で返されること" do
         post "/api/v1/login", params: { session: {
-          email: user.email.sub(/@/, "_"),
-          password: user.password.chop
+          email: @invalid_email,
+          password: @invalid_password
         } }
         json = JSON.parse(response.body)
         expect(json["errors"]).to be_truthy
