@@ -44,7 +44,7 @@ RSpec.describe "Sessions", type: :request do
     end
   end
 
-  describe "'/login'にGETメソッドでリクエストを送信した場合" do
+  describe "'/login'にGETメソッドでリクエストを送信" do
     it "ステータスコード200 (ok) が返されること" do
       get "/api/v1/login"
       expect(response.status).to eq 200
@@ -57,7 +57,7 @@ RSpec.describe "Sessions", type: :request do
     end
   end
 
-  describe "'/login'にPOSTメソッドでリクエストを送信した場合" do
+  describe "'/login'にPOSTメソッドでリクエストを送信" do
     context "パラメータが妥当な場合" do
       let!(:user) { FactoryBot.create(:user) }
       it "ステータスコード200 (ok) が返されること" do
@@ -74,7 +74,7 @@ RSpec.describe "Sessions", type: :request do
         } }
         expect(session[:user_id].nil?).to be_falsey
       end
-      it "認証されたユーザーがJSON形式で返されること" do
+      it "既認証ユーザーがJSON形式で返されること" do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password
@@ -103,7 +103,7 @@ RSpec.describe "Sessions", type: :request do
     end
   end
 
-  describe "'/logout'にDELETEメソッドでリクエストを送信した場合" do
+  describe "'/logout'にDELETEメソッドでリクエストを送信" do
     let!(:user) { FactoryBot.create(:user) }
     it "ステータスコード204 (no content) が返されること" do
       post "/api/v1/login", params: { session: {
