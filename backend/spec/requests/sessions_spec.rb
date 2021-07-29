@@ -59,7 +59,7 @@ RSpec.describe "Sessions", type: :request do
 
   describe "'/login'にPOSTメソッドでリクエストを送信" do
     let!(:unauth_user) { FactoryBot.build(:unauth_user) }
-    context "パラメータが妥当な場合" do
+    context "パラメータが妥当かつ「ログイン情報を保存する」をチェックする場合" do
       let!(:user) { FactoryBot.create(:user) }
       before do
         @valid_email = unauth_user.email
@@ -68,21 +68,92 @@ RSpec.describe "Sessions", type: :request do
       it "ステータスコード200 (ok) が返されること" do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
-          password: @valid_password
+          password: @valid_password,
+          remember_me: "1"
         } }
         expect(response.status).to eq 200
       end
       it "cookieに一時的な暗号化済みのユーザーIDが生成されること" do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
-          password: @valid_password
+          password: @valid_password,
+          remember_me: "1"
         } }
-        expect(session[:user_id].nil?).to be_falsey
+        expect(session[:user_id].blank?).to be_falsey
+      end
+      it "cookieに永続的な暗号化済みのユーザーIDと永続的な暗号化済みの記憶トークンが生成されること" do
+        post "/api/v1/login", params: { session: {
+          email: @valid_email,
+          password: @valid_password,
+          remember_me: "1"
+        } }
+        expect(cookies.permanent.signed[:user_id].blank?).to be_falsey
+        expect(cookies.permanent[:remember_token].blank?).to be_falsey
+      end
+      it "既認証ユーザーのremember_digest属性がランダムな文字列であるトークンのハッシュ値に更新されること" do
+        post "/api/v1/login", params: { session: {
+          email: @valid_email,
+          password: @valid_password,
+          remember_me: "1"
+        } }
+        auth_user = User.find(user.id)
+        expect(auth_user.remember_digest.nil?).to be_falsey
       end
       it "既認証ユーザーがJSON形式で返されること" do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
-          password: @valid_password
+          password: @valid_password,
+          remember_me: "1"
+        } }
+        json = JSON.parse(response.body)
+        expect(json["auth_user"]["id"]).to eq(user.id)
+      end
+    end
+    context "パラメータが妥当かつ「ログイン情報を保存する」をチェックしない場合" do
+      let!(:user) { FactoryBot.create(:user) }
+      before do
+        @valid_email = unauth_user.email
+        @valid_password = unauth_user.password
+      end
+      it "ステータスコード200 (ok) が返されること" do
+        post "/api/v1/login", params: { session: {
+          email: @valid_email,
+          password: @valid_password,
+          remember_me: "0"
+        } }
+        expect(response.status).to eq 200
+      end
+      it "cookieに一時的な暗号化済みのユーザーIDが生成されること" do
+        post "/api/v1/login", params: { session: {
+          email: @valid_email,
+          password: @valid_password,
+          remember_me: "0"
+        } }
+        expect(session[:user_id].blank?).to be_falsey
+      end
+      it "cookieに永続的な暗号化済みのユーザーIDと永続的な暗号化済みの記憶トークンが生成されないこと" do
+        post "/api/v1/login", params: { session: {
+          email: @valid_email,
+          password: @valid_password,
+          remember_me: "0"
+        } }
+        expect(cookies.permanent.signed[:user_id].blank?).to be_truthy
+        expect(cookies.permanent[:remember_token].blank?).to be_truthy
+      end
+      it "既認証ユーザーのremember_digest属性がランダムな文字列であるトークンのハッシュ値に更新されないこと" do
+        post "/api/v1/login", params: { session: {
+          email: @valid_email,
+          password: @valid_password,
+          remember_me: "0"
+        } }
+        auth_user = User.find(user.id)
+        expect(auth_user.remember_digest.nil?).to be_truthy
+      end
+      it "既認証ユーザーがJSON形式で返されること" do
+        post "/api/v1/login", params: { session: {
+          email: @valid_email,
+          password: @valid_password,
+          remember_me: "0"
         } }
         json = JSON.parse(response.body)
         expect(json["auth_user"]["id"]).to eq(user.id)
@@ -113,31 +184,87 @@ RSpec.describe "Sessions", type: :request do
 
   describe "'/logout'にDELETEメソッドでリクエストを送信" do
     let!(:user) { FactoryBot.create(:user) }
-    it "ステータスコード204 (no content) が返されること" do
-      post "/api/v1/login", params: { session: {
-        email: user.email,
-        password: user.password
-      } }
-      delete "/api/v1/logout"
-      expect(response.status).to eq 204
+    context "「ログイン情報を保存する」にチェックしてログインした既認証ユーザーがログアウトした場合" do
+      it "ステータスコード204 (no content) が返されること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password,
+          remember_me: "1"
+        } }
+        delete "/api/v1/logout"
+        expect(response.status).to eq 204
+      end
+      it "cookieに格納されている一時的な暗号化済みのユーザーIDが削除されること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password,
+          remember_me: "1"
+        } }
+        delete "/api/v1/logout"
+        expect(session[:user_id].blank?).to be_truthy
+      end
+      it "cookieに永続的な暗号化済みのユーザーIDと永続的な暗号化済みの記憶トークンが削除されること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password,
+          remember_me: "1"
+        } }
+        delete "/api/v1/logout"
+        expect(cookies.permanent.signed[:user_id].blank?).to be_truthy
+        expect(cookies.permanent[:remember_token].blank?).to be_truthy
+      end
+      it "既認証ユーザーのremember_digest属性がnilに更新されること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password,
+          remember_me: "1"
+        } }
+        delete "/api/v1/logout"
+        unauth_user = User.find(user.id)
+        expect(unauth_user.remember_digest.nil?).to be_truthy
+      end
+      it "ユーザーがログイン中の場合にのみログアウトできること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password,
+          remember_me: "1"
+        } }
+        delete "/api/v1/logout"
+        expect(session[:user_id].blank?).to be_truthy
+        delete "/api/v1/logout"
+        expect(response.status).to eq 204
+      end
     end
-    it "cookieに格納されている一時的な暗号化済みのユーザーIDが削除されること" do
-      post "/api/v1/login", params: { session: {
-        email: user.email,
-        password: user.password
-      } }
-      delete "/api/v1/logout"
-      expect(session[:user_id].blank?).to be_truthy
-    end
-    it "ユーザーがログイン中の場合にのみログアウトできること" do
-      post "/api/v1/login", params: { session: {
-        email: user.email,
-        password: user.password
-      } }
-      delete "/api/v1/logout"
-      expect(session[:user_id].blank?).to be_truthy
-      delete "/api/v1/logout"
-      expect(response.status).to eq 204
+    context "「ログイン情報を保存する」にチェックせずにログインした既認証ユーザーがログアウトした場合" do
+      it "ステータスコード204 (no content) が返されること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password,
+          remember_me: "0"
+        } }
+        delete "/api/v1/logout"
+        expect(response.status).to eq 204
+      end
+      it "cookieに格納されている一時的な暗号化済みのユーザーIDが削除されること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password,
+          remember_me: "0"
+        } }
+        delete "/api/v1/logout"
+        expect(session[:user_id].blank?).to be_truthy
+      end
+      it "ユーザーがログイン中の場合にのみログアウトできること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password,
+          remember_me: "0"
+        } }
+        delete "/api/v1/logout"
+        expect(session[:user_id].blank?).to be_truthy
+        delete "/api/v1/logout"
+        expect(response.status).to eq 204
+      end
     end
   end
 end

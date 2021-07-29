@@ -1,6 +1,6 @@
 class Session
   include ActiveModel::Model
-  attr_accessor :email, :password
+  attr_accessor :email, :password, :remember_me
 
   validate :true_email
   validate :true_password

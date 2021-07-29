@@ -26,6 +26,10 @@ Lint/UnusedMethodArgument:
 
 
 # Metrics
+Metrics/AbcSize:
+  Max: 21
+# https://docs.rubocop.org/rubocop/1.17/cops_metrics.html#metricsabcsize
+
 Metrics/BlockLength:
     Exclude: ["spec/**/*"]
 # https://docs.rubocop.org/rubocop/1.17/cops_metrics.html#metricsblocklength
@@ -43,6 +47,10 @@ Style/Documentation:
 Style/FrozenStringLiteralComment:
   Enabled: false
 # https://docs.rubocop.org/rubocop/1.17/cops_style.html#stylefrozenstringliteralcomment
+
+Style/RedundantSelf:
+  Enabled: false
+# https://docs.rubocop.org/rubocop/1.17/cops_style.html#styleredundantself
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
