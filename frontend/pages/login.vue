@@ -60,6 +60,14 @@
               ></v-text-field>
             </ValidationProvider>
 
+            <v-checkbox
+              id="userRememberMe"
+              v-model="user.remember_me"
+              label="ログイン情報を保存する"
+              color="cyan darken-3"
+              dense
+            ></v-checkbox>
+
             <v-card-actions>
               <v-btn
                 class="my-4 grey--text text--lighten-4 font-weight-bold"
@@ -162,10 +170,17 @@ export default {
     },
     loginUser: async function () {
       try {
+        const userRememberMe = document.getElementById('userRememberMe')
+        if (userRememberMe.checked) {
+          this.user.remember_me = '1'
+        } else {
+          this.user.remember_me = '0'
+        }
         const response = await this.$axios.$post('/api/v1/login', {
           session: {
             email: this.user.email,
             password: this.user.password,
+            remember_me: this.user.remember_me,
           },
         })
         if (response.auth_user) {
