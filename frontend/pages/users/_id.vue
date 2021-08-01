@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid>
-    <v-row>
+  <v-container v-bind:fluid="isUsersParentPath($route.path) ? true : false">
+    <v-row v-if="isUsersParentPath($route.path)">
       <v-col cols="12">
         <v-card>
           <v-card-title class="d-flex flex-column justify-center">
@@ -26,6 +26,7 @@
         </v-card>
       </v-col>
     </v-row>
+    <NuxtChild v-on:assign-updated-user="assignUpdatedUser($event)" />
   </v-container>
 </template>
 
@@ -33,11 +34,24 @@
 export default {
   asyncData: async function (context) {
     const response = await context.$axios.$get(
-      `${context.$config.axios.browserBaseURL}/api/v1/users/${context.params.id}`
+      `/api/v1/users/${context.params.id}`
     )
     return {
       user: response.user,
     }
+  },
+  methods: {
+    assignUpdatedUser: function (updatedUser) {
+      this.user = updatedUser
+    },
+    isUsersParentPath: function (path) {
+      const pathNamesLength = path.split('/').length
+      if (pathNamesLength === 3) {
+        return true
+      } else if (pathNamesLength > 3) {
+        return false
+      }
+    },
   },
 }
 </script>
