@@ -87,6 +87,11 @@ export default {
           link: '/users/' + this.$store.state.auth.authUser.id,
           icon: 'mdi-account',
         },
+        {
+          title: 'アカウント設定',
+          link: '/users/' + this.$store.state.auth.authUser.id + '/edit',
+          icon: 'mdi-account-edit',
+        },
       ]
     },
   },
