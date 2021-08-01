@@ -13,12 +13,19 @@ class User < ApplicationRecord
                     format: { with: valid_email_regex, allow_blank: true },
                     uniqueness: true
 
-  has_secure_password
+  has_secure_password validations: false
+  validate do |record|
+    record.errors.add(:password, :blank) unless record.password_digest.present?
+  end
+  validate(on: :update) do |record|
+    record.errors.add(:password, :blank) if record.password_digest.present? && self.password.nil?
+  end
   valid_password_regex = /\A[a-zA-Z0-9]+\z/
   validates :password,  presence: true,
                         allow_nil: true,
                         length: { maximum: 32, minimum: 8, allow_blank: true },
                         format: { with: valid_password_regex, allow_blank: true }
+  validates_confirmation_of :password, allow_blank: true
 
   validates :password_confirmation, presence: true
 

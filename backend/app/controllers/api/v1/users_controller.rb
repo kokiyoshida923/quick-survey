@@ -1,6 +1,9 @@
 module Api
   module V1
     class UsersController < ApplicationController
+      before_action :logged_in_user, only: [:edit, :update]
+      before_action :correct_user, only: [:edit, :update]
+
       def show
         user = User.find(params[:id])
         render json: { user: user }
@@ -21,10 +24,36 @@ module Api
         end
       end
 
+      def edit
+        user = User.find(params[:id])
+        render json: { user: user }
+      end
+
+      def update
+        user = User.find(params[:id])
+        if user.update(user_params)
+          render json: { user: user }
+        else
+          errors = user.errors.full_messages
+          render json: { errors: errors }
+        end
+      end
+
       private
 
       def user_params
         params.require(:user).permit(:name, :email, :password, :password_confirmation)
+      end
+
+      def logged_in_user
+        return if @current_user
+
+        render status: :forbidden, json: { message: "ユーザーがログインしていません" }
+      end
+
+      def correct_user
+        user = User.find(params[:id])
+        render status: :forbidden, json: { message: "ユーザーが正しくありません" } unless user == @current_user
       end
     end
   end
