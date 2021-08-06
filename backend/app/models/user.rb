@@ -17,9 +17,6 @@ class User < ApplicationRecord
   validate do |record|
     record.errors.add(:password, :blank) unless record.password_digest.present?
   end
-  validate(on: :update) do |record|
-    record.errors.add(:password, :blank) if record.password_digest.present? && self.password.nil?
-  end
   valid_password_regex = /\A[a-zA-Z0-9]+\z/
   validates :password,  presence: true,
                         allow_nil: true,
@@ -27,7 +24,11 @@ class User < ApplicationRecord
                         format: { with: valid_password_regex, allow_blank: true }
   validates_confirmation_of :password, allow_blank: true
 
-  validates :password_confirmation, presence: true
+  validates :password_confirmation, presence: true, on: :create
+  validates :password_confirmation, presence: true, on: :update, unless: :nil_or_empty_string?
+  def nil_or_empty_string?
+    self.password_confirmation.nil? || self.password_confirmation.length.zero?
+  end
 
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost

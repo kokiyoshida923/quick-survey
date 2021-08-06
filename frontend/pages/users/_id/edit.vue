@@ -58,7 +58,7 @@
             <ValidationProvider
               v-slot="{ errors }"
               name="パスワード"
-              rules="required|userPassword|confirmed:@passwordConfirmation"
+              rules="userPassword|confirmed:@passwordConfirmation"
             >
               <v-text-field
                 v-model="user.password"
@@ -81,7 +81,6 @@
             <ValidationProvider
               v-slot="{ errors }"
               name="パスワード(確認用)"
-              rules="required"
               vid="passwordConfirmation"
             >
               <v-text-field
