@@ -9,10 +9,16 @@ ja:
         avatar: ユーザー画像
         password: パスワード
         password_confirmation: パスワード(確認用)
+    errors:
+      models:
+        user:
+          format: "%{attribute}%{message}"
   activemodel:
     attributes:
       session:
         email: メールアドレス
         password: パスワード
-  errors:
-    format: "%{attribute}%{message}"
+    errors:
+      models:
+        session:
+          format: "%{attribute}%{message}"
