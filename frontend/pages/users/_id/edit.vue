@@ -1,6 +1,14 @@
 <template>
   <v-row no-gutters>
-    <v-col class="mx-auto" cols="12" sm="10" md="8" lg="6" xl="4">
+    <v-col
+      v-if="isUsersEditPath($route.path)"
+      class="mx-auto"
+      cols="12"
+      sm="10"
+      md="8"
+      lg="6"
+      xl="4"
+    >
       <v-card class="py-4" outlined>
         <v-card-title>
           <div
@@ -122,6 +130,9 @@
         </v-card-text>
       </v-card>
     </v-col>
+    <NuxtChild
+      v-on:assign-updated-user="$emit('assign-updated-user', $event)"
+    />
   </v-row>
 </template>
 
@@ -272,6 +283,13 @@ export default {
           alertType: 'warning',
           alertMessage: 'サーバーとの通信にエラーが発生しています',
         })
+      }
+    },
+    isUsersEditPath: function (path) {
+      if (path === '/users/' + this.user.id + '/edit') {
+        return true
+      } else {
+        return false
       }
     },
   },

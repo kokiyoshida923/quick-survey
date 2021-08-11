@@ -23,8 +23,11 @@
               v-bind:src="
                 `${$config.axios.browserBaseURL}` + authUser.avatar.url
               "
-              max-height="90%"
-              max-width="90%"
+              v-bind:style="
+                authUser.avatar.url === '/images/fallback/default.png'
+                  ? { 'max-width': '90%', 'max-height': '90%' }
+                  : ''
+              "
             ></v-img>
           </v-avatar>
         </v-hover>
@@ -91,6 +94,11 @@ export default {
           title: 'アカウント設定',
           link: '/users/' + this.$store.state.auth.authUser.id + '/edit',
           icon: 'mdi-account-edit',
+        },
+        {
+          title: 'アバター設定',
+          link: '/users/' + this.$store.state.auth.authUser.id + '/edit/avatar',
+          icon: 'mdi-image',
         },
       ]
     },
