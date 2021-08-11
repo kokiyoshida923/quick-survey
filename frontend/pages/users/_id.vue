@@ -15,8 +15,11 @@
             >
               <v-img
                 v-bind:src="`${$config.axios.browserBaseURL}` + user.avatar.url"
-                max-height="90%"
-                max-width="90%"
+                v-bind:style="
+                  user.avatar.url === '/images/fallback/default.png'
+                    ? { 'max-width': '90%', 'max-height': '90%' }
+                    : ''
+                "
               ></v-img>
             </v-avatar>
             <v-card-text class="text-center">
