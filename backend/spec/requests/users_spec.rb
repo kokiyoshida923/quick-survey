@@ -63,6 +63,15 @@ RSpec.describe "Users", type: :request do
           } }
         }.to change(User, :count).by(1)
       end
+      it "cookieに一時的な暗号化済みのユーザーIDが生成されること" do
+        post "/api/v1/signup", params: { user: {
+          name: @valid_name,
+          email: @valid_email,
+          password: @valid_password,
+          password_confirmation: @valid_password
+        } }
+        expect(session[:user_id].blank?).to be_falsey
+      end
     end
     context "パラメータが不当な場合" do
       before do
