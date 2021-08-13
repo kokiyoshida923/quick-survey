@@ -183,6 +183,26 @@ export default {
     ValidationObserver: ValidationObserver,
     ValidationProvider: ValidationProvider,
   },
+  middleware: async function (context) {
+    try {
+      await context.$axios.get('/api/v1/users/' + context.params.id + '/edit')
+    } catch (e) {
+      context.redirect('/')
+      if (e.response.statusText === 'Forbidden') {
+        context.store.dispatch('message/flashMessage', {
+          isAlert: true,
+          alertType: 'error',
+          alertMessage: e.response.data.message,
+        })
+      } else {
+        context.store.dispatch('message/flashMessage', {
+          isAlert: true,
+          alertType: 'warning',
+          alertMessage: 'サーバーとの通信にエラーが発生しています',
+        })
+      }
+    }
+  },
   asyncData: async function (context) {
     const response = await context.$axios.$get(
       '/api/v1/users/' + context.params.id + '/edit'
