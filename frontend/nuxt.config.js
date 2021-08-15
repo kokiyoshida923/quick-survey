@@ -61,6 +61,9 @@ export default {
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
+    defaultAssets: {
+      icons: false,
+    },
     customVariables: [
       '~/assets/variables.scss',
       '~/assets/variables/breakpoints.scss',

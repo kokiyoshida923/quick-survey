@@ -56,7 +56,7 @@
                 dense
                 show-size
                 small-chips
-                prepend-icon="mdi-camera"
+                v-bind:prepend-icon="userEditAvatarIcon.avatar.mdiCamera"
                 v-on:change="handleFileChange($event, validate)"
                 v-on:click:clear="handleFileClear()"
               ></v-file-input>
@@ -81,6 +81,8 @@
 </template>
 
 <script>
+import { mdiCamera } from '@mdi/js'
+
 import {
   extend,
   localize,
@@ -130,6 +132,9 @@ export default {
   },
   data: function () {
     return {
+      userEditAvatarIcon: {
+        avatar: { mdiCamera: mdiCamera },
+      },
       loading: false,
       fileLoading: false,
       uploadFile: null,

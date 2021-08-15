@@ -5,7 +5,9 @@
         <v-alert
           v-if="isAlert"
           class="mt-1 text-caption font-weight-bold"
-          v-bind:type="alertType"
+          v-bind:color="alertColor"
+          v-bind:icon="Object.values(alertIcon)[0]"
+          dark
           dense
         >
           {{ alertMessage }}
@@ -21,8 +23,11 @@ export default {
     isAlert: function () {
       return this.$store.state.message.isAlert
     },
-    alertType: function () {
-      return this.$store.state.message.alertType
+    alertIcon: function () {
+      return this.$store.state.message.alertIcon
+    },
+    alertColor: function () {
+      return this.$store.state.message.alertColor
     },
     alertMessage: function () {
       return this.$store.state.message.alertMessage
