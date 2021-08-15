@@ -1,6 +1,13 @@
+import {
+  mdiCheckCircle,
+  mdiAlertOctagonOutline,
+  mdiAlertOutline,
+} from '@mdi/js'
+
 export const state = () => ({
   isAlert: false,
-  alertType: null,
+  alertIcon: {},
+  alertColor: null,
   alertMessage: null,
 })
 
@@ -9,7 +16,21 @@ export const mutations = {
     state.isAlert = isAlert
   },
   confirmAlertType: function (state, alertType) {
-    state.alertType = alertType
+    switch (alertType) {
+      case 'success':
+        state.alertIcon = { mdiCheckCircle: mdiCheckCircle }
+        state.alertColor = 'green'
+        break
+      case 'error':
+        state.alertIcon = { mdiAlertOctagonOutline: mdiAlertOctagonOutline }
+        state.alertColor = 'red accent-2'
+        break
+      case 'warning':
+        state.alertIcon = { mdiAlertOutline: mdiAlertOutline }
+        state.alertColor = 'orange darken-1'
+        break
+      default:
+    }
   },
   insertAlertMessage: function (state, alertMessage) {
     state.alertMessage = alertMessage

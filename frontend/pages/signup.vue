@@ -29,9 +29,9 @@
                 v-model="user.name"
                 v-bind:class="[$vuetify.breakpoint.smAndDown ? 'my-3' : 'my-5']"
                 v-bind:error-messages="errorHandler(errors, 'name')"
+                v-bind:prepend-icon="signupIcon.name.mdiAccountCircle"
                 label="ユーザー名"
                 color="cyan darken-3"
-                prepend-icon="mdi-account-circle"
                 counter="20"
                 v-on:focus="showNameError = false"
                 v-on:blur="showNameError = true"
@@ -47,9 +47,9 @@
                 v-model="user.email"
                 v-bind:class="[$vuetify.breakpoint.smAndDown ? 'my-3' : 'my-5']"
                 v-bind:error-messages="errorHandler(errors, 'email')"
+                v-bind:prepend-icon="signupIcon.email.mdiEmail"
                 label="メールアドレス"
                 color="cyan darken-3"
-                prepend-icon="mdi-email"
                 v-on:focus="showEmailError = false"
                 v-on:blur="showEmailError = true"
               ></v-text-field>
@@ -68,12 +68,14 @@
                   ]"
                   v-bind:error-messages="errorHandler(errors, 'password')"
                   v-bind:append-icon="
-                    showUserPassword ? 'mdi-eye' : 'mdi-eye-off'
+                    showUserPassword
+                      ? signupIcon.eye.mdiEye
+                      : signupIcon.eyeOff.mdiEyeOff
                   "
                   v-bind:type="showUserPassword ? 'text' : 'password'"
+                  v-bind:prepend-icon="signupIcon.password.mdiLock"
                   label="パスワード"
                   color="cyan darken-3"
-                  prepend-icon="mdi-lock"
                   counter="32"
                   v-on:focus="showPasswordError = false"
                   v-on:blur="showPasswordError = true"
@@ -96,14 +98,18 @@
                     errorHandler(errors, 'passwordConfirmation')
                   "
                   v-bind:append-icon="
-                    showUserPasswordConfirmation ? 'mdi-eye' : 'mdi-eye-off'
+                    showUserPasswordConfirmation
+                      ? signupIcon.eye.mdiEye
+                      : signupIcon.eyeOff.mdiEyeOff
                   "
                   v-bind:type="
                     showUserPasswordConfirmation ? 'text' : 'password'
                   "
                   label="パスワード(確認用)"
                   color="cyan darken-3"
-                  prepend-icon="mdi-lock-check"
+                  v-bind:prepend-icon="
+                    signupIcon.password_confirmation.mdiLockCheck
+                  "
                   v-on:focus="showPasswordConfirmationError = false"
                   v-on:blur="showPasswordConfirmationError = true"
                   v-on:click:append="
@@ -135,6 +141,15 @@
 </template>
 
 <script>
+import {
+  mdiAccountCircle,
+  mdiEmail,
+  mdiLock,
+  mdiLockCheck,
+  mdiEye,
+  mdiEyeOff,
+} from '@mdi/js'
+
 import {
   extend,
   localize,
@@ -189,6 +204,14 @@ export default {
   },
   data: function () {
     return {
+      signupIcon: {
+        name: { mdiAccountCircle: mdiAccountCircle },
+        email: { mdiEmail: mdiEmail },
+        password: { mdiLock: mdiLock },
+        password_confirmation: { mdiLockCheck: mdiLockCheck },
+        eye: { madEye: mdiEye },
+        eyeOff: { mdiEyeOff: mdiEyeOff },
+      },
       loading: false,
       loader: null,
       showNameError: false,

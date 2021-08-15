@@ -9,6 +9,9 @@ export default {
       lg: 1280,
     },
   },
+  icons: {
+    iconfont: 'mdiSvg',
+  },
   theme: {
     dark: false,
     themes: {

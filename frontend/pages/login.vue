@@ -29,9 +29,9 @@
                 v-model="user.email"
                 v-bind:class="[$vuetify.breakpoint.smAndDown ? 'my-3' : 'my-5']"
                 v-bind:error-messages="errorHandler(errors, 'email')"
+                v-bind:prepend-icon="loginIcon.email.mdiEmail"
                 label="メールアドレス"
                 color="cyan darken-3"
-                prepend-icon="mdi-email"
                 v-on:focus="showEmailError = false"
                 v-on:blur="showEmailError = true"
               ></v-text-field>
@@ -47,12 +47,14 @@
                 v-bind:class="[$vuetify.breakpoint.smAndDown ? 'my-3' : 'my-5']"
                 v-bind:error-messages="errorHandler(errors, 'password')"
                 v-bind:append-icon="
-                  showLoginPassword ? 'mdi-eye' : 'mdi-eye-off'
+                  showLoginPassword
+                    ? loginIcon.eye.mdiEye
+                    : loginIcon.eyeOff.mdiEyeOff
                 "
                 v-bind:type="showLoginPassword ? 'text' : 'password'"
                 label="パスワード"
                 color="cyan darken-3"
-                prepend-icon="mdi-lock"
+                v-bind:prepend-icon="loginIcon.password.mdiLock"
                 counter="32"
                 v-on:focus="showPasswordError = false"
                 v-on:blur="showPasswordError = true"
@@ -90,6 +92,8 @@
 </template>
 
 <script>
+import { mdiEmail, mdiLock, mdiEye, mdiEyeOff } from '@mdi/js'
+
 import { extend, localize, ValidationProvider } from 'vee-validate'
 import ja from 'vee-validate/dist/locale/ja'
 import { required } from 'vee-validate/dist/rules'
@@ -128,6 +132,12 @@ export default {
   },
   data: function () {
     return {
+      loginIcon: {
+        email: { mdiEmail: mdiEmail },
+        password: { mdiLock: mdiLock },
+        eye: { mdiEye: mdiEye },
+        eyeOff: { mdiEyeOff: mdiEyeOff },
+      },
       loading: false,
       loader: null,
       showEmailError: false,

@@ -40,7 +40,9 @@
           exact
         >
           <v-list-item-icon>
-            <v-icon v-text="authenticatedHeaderItemList.icon"></v-icon>
+            <v-icon
+              v-text="Object.values(authenticatedHeaderItemList.icon)[0]"
+            ></v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title
@@ -55,7 +57,7 @@
         <v-divider class="my-3"></v-divider>
         <v-list-item v-on:click="logoutUser()">
           <v-list-item-icon>
-            <v-icon v-text="authenticatedHeaderLogout.icon"></v-icon>
+            <v-icon v-text="authenticatedHeaderLogout.icon.mdiLogout"></v-icon>
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title
@@ -69,12 +71,14 @@
 </template>
 
 <script>
+import { mdiLogout, mdiAccount, mdiAccountEdit, mdiImage } from '@mdi/js'
+
 export default {
   data: function () {
     return {
       authenticatedHeaderLogout: {
         title: 'ログアウト',
-        icon: 'mdi-logout',
+        icon: { mdiLogout: mdiLogout },
       },
     }
   },
@@ -88,17 +92,17 @@ export default {
           title: this.$store.state.auth.authUser.name,
           subtitle: '自分のページへ移動',
           link: '/users/' + this.$store.state.auth.authUser.id,
-          icon: 'mdi-account',
+          icon: { mdiAccount: mdiAccount },
         },
         {
           title: 'アカウント設定',
           link: '/users/' + this.$store.state.auth.authUser.id + '/edit',
-          icon: 'mdi-account-edit',
+          icon: { mdiAccountEdit: mdiAccountEdit },
         },
         {
           title: 'アバター設定',
           link: '/users/' + this.$store.state.auth.authUser.id + '/edit/avatar',
-          icon: 'mdi-image',
+          icon: { mdiImage: mdiImage },
         },
       ]
     },
