@@ -24,7 +24,7 @@
               quick survey
             </div>
             <UnauthenticatedHeaderItem
-              v-if="$store.state.auth.isAuthenticated === false"
+              v-if="isAuthenticated === false"
             ></UnauthenticatedHeaderItem>
             <AuthenticatedHeaderItem v-else></AuthenticatedHeaderItem>
           </v-card>
@@ -52,3 +52,13 @@
     </v-footer>
   </v-app>
 </template>
+
+<script>
+export default {
+  computed: {
+    isAuthenticated: function () {
+      return this.$store.state.auth.isAuthenticated
+    },
+  },
+}
+</script>
