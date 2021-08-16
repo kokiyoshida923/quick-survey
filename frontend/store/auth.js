@@ -1,7 +1,9 @@
-export const state = () => ({
-  isAuthenticated: null,
-  authUser: {},
-})
+export const state = function () {
+  return {
+    isAuthenticated: null,
+    authUser: {},
+  }
+}
 
 export const mutations = {
   setIsAuthenticated: function (state, isAuthenticated) {

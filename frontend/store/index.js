@@ -1,3 +1,5 @@
-export const state = () => ({
-  nodeEnv: process.env.NODE_ENV,
-})
+export const state = function () {
+  return {
+    nodeEnv: process.env.NODE_ENV,
+  }
+}

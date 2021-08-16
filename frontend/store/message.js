@@ -4,12 +4,14 @@ import {
   mdiAlertOutline,
 } from '@mdi/js'
 
-export const state = () => ({
-  isAlert: false,
-  alertIcon: {},
-  alertColor: null,
-  alertMessage: null,
-})
+export const state = function () {
+  return {
+    isAlert: false,
+    alertIcon: {},
+    alertColor: null,
+    alertMessage: null,
+  }
+}
 
 export const mutations = {
   toggleAlertBoolean: function (state, isAlert) {
