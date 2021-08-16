@@ -37,7 +37,7 @@
 export default {
   asyncData: async function (context) {
     const response = await context.$axios.$get(
-      `/api/v1/users/${context.params.id}`
+      '/api/v1/users/' + context.params.id
     )
     return {
       user: response.user,
