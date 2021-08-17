@@ -302,8 +302,8 @@ export default {
       }
     },
     createAuthentication: function (user) {
-      this.$store.commit('auth/setIsAuthenticated', true)
-      this.$store.commit('auth/setAuthUser', user)
+      this.$store.commit('authentication/setIsAuthenticated', true)
+      this.$store.commit('authentication/setAuthUser', user)
     },
   },
 }
