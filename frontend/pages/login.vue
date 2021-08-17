@@ -194,6 +194,7 @@ export default {
           },
         })
         if (response.auth_user) {
+          this.createAuthentication(response.auth_user)
           this.$store.dispatch('message/flashMessage', {
             isAlert: true,
             alertType: 'success',
@@ -215,6 +216,10 @@ export default {
           alertMessage: 'サーバーとの通信にエラーが発生しています',
         })
       }
+    },
+    createAuthentication: function (user) {
+      this.$store.commit('auth/setIsAuthenticated', true)
+      this.$store.commit('auth/setAuthUser', user)
     },
   },
 }

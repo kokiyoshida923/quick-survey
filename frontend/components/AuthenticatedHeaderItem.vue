@@ -111,6 +111,7 @@ export default {
     logoutUser: async function () {
       try {
         await this.$axios.$delete('/api/v1/logout')
+        this.destroyAuthentication()
         this.$store.dispatch('message/flashMessage', {
           isAlert: true,
           alertType: 'success',
@@ -124,6 +125,10 @@ export default {
           alertMessage: 'サーバーとの通信にエラーが発生しています',
         })
       }
+    },
+    destroyAuthentication: function () {
+      this.$store.commit('auth/setIsAuthenticated', false)
+      this.$store.commit('auth/setAuthUser', {})
     },
   },
 }
