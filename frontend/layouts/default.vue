@@ -57,7 +57,7 @@
 export default {
   computed: {
     isAuthenticated: function () {
-      return this.$store.state.auth.isAuthenticated
+      return this.$store.state.authentication.isAuthenticated
     },
   },
 }

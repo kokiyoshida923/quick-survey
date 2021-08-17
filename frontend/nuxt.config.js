@@ -51,7 +51,7 @@ export default {
   },
 
   router: {
-    middleware: 'authentication',
+    middleware: 'fetchAuthenticationState',
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

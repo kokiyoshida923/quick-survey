@@ -84,24 +84,28 @@ export default {
   },
   computed: {
     authUser: function () {
-      return this.$store.state.auth.authUser
+      return this.$store.state.authentication.authUser
     },
     authenticatedHeaderItemLists: function () {
       return [
         {
-          title: this.$store.state.auth.authUser.name,
+          title: this.$store.state.authentication.authUser.name,
           subtitle: '自分のページへ移動',
-          link: '/users/' + this.$store.state.auth.authUser.id,
+          link: '/users/' + this.$store.state.authentication.authUser.id,
           icon: { mdiAccount: mdiAccount },
         },
         {
           title: 'アカウント設定',
-          link: '/users/' + this.$store.state.auth.authUser.id + '/edit',
+          link:
+            '/users/' + this.$store.state.authentication.authUser.id + '/edit',
           icon: { mdiAccountEdit: mdiAccountEdit },
         },
         {
           title: 'アバター設定',
-          link: '/users/' + this.$store.state.auth.authUser.id + '/edit/avatar',
+          link:
+            '/users/' +
+            this.$store.state.authentication.authUser.id +
+            '/edit/avatar',
           icon: { mdiImage: mdiImage },
         },
       ]
@@ -127,8 +131,8 @@ export default {
       }
     },
     destroyAuthentication: function () {
-      this.$store.commit('auth/setIsAuthenticated', false)
-      this.$store.commit('auth/setAuthUser', {})
+      this.$store.commit('authentication/setIsAuthenticated', false)
+      this.$store.commit('authentication/setAuthUser', {})
     },
   },
 }
