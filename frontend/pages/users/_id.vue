@@ -1,6 +1,6 @@
 <template>
-  <v-container v-bind:fluid="isUsersParentPath($route.path) ? true : false">
-    <v-row v-if="isUsersParentPath($route.path)">
+  <v-container v-bind:fluid="isUsersShowPath($route.path) ? true : false">
+    <v-row v-if="isUsersShowPath($route.path)">
       <v-col cols="12">
         <v-card>
           <v-card-title class="d-flex flex-column justify-center">
@@ -47,11 +47,10 @@ export default {
     assignUpdatedUser: function (updatedUser) {
       this.user = updatedUser
     },
-    isUsersParentPath: function (path) {
-      const pathNamesLength = path.split('/').length
-      if (pathNamesLength === 3) {
+    isUsersShowPath: function (path) {
+      if (path === '/users/' + this.user.id) {
         return true
-      } else if (pathNamesLength > 3) {
+      } else {
         return false
       }
     },
