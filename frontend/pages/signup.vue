@@ -122,8 +122,6 @@
             <v-card-actions>
               <v-btn
                 class="my-4 grey--text text--lighten-4 font-weight-bold"
-                v-bind:loading="loading"
-                v-bind:disabled="loading"
                 v-bind:ripple="false"
                 color="cyan darken-3"
                 block
@@ -212,8 +210,6 @@ export default {
         eye: { madEye: mdiEye },
         eyeOff: { mdiEyeOff: mdiEyeOff },
       },
-      loading: false,
-      loader: null,
       showNameError: false,
       showEmailError: false,
       showPasswordError: false,
@@ -222,21 +218,6 @@ export default {
       showUserPasswordConfirmation: false,
       signupUserErrors: {},
     }
-  },
-  watch: {
-    loader: function () {
-      const l = this.loader
-      this[l] = !this[l]
-
-      const self = this
-      setTimeout(function () {
-        self[l] = false
-      }, 1000)
-      this.loader = null
-    },
-  },
-  created: function () {
-    this.loader = 'loading'
   },
   methods: {
     errorHandler: function (errors, label) {
