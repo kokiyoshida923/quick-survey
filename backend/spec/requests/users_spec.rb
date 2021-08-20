@@ -112,6 +112,7 @@ RSpec.describe "Users", type: :request do
   end
 
   describe "'/users/:id/edit'にGETメソッドでリクエストを送信" do
+    let!(:headers) { { "Content-Type" => "application/json" } }
     context "ユーザーがログインしていない場合" do
       let!(:user) { FactoryBot.create(:user) }
       it "ステータスコード403 (forbidden) が返されること" do
@@ -130,8 +131,8 @@ RSpec.describe "Users", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         get "/api/v1/users/#{user.id}/edit"
         expect(response.status).to eq 200
       end
@@ -139,8 +140,8 @@ RSpec.describe "Users", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         get "/api/v1/users/#{user.id}/edit"
         json = JSON.parse(response.body)
         expect(json["user"]["id"]).to eq(user.id)
@@ -153,8 +154,8 @@ RSpec.describe "Users", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         get "/api/v1/users/#{another_user.id}/edit"
         expect(response.status).to eq 403
       end
@@ -162,8 +163,8 @@ RSpec.describe "Users", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         get "/api/v1/users/#{another_user.id}/edit"
         json = JSON.parse(response.body)
         expect(json["message"]).to eq("ユーザーが正しくありません")
@@ -172,6 +173,7 @@ RSpec.describe "Users", type: :request do
   end
 
   describe "'/users/:id'にPATCHメソッドでリクエストを送信" do
+    let!(:headers) { { "Content-Type" => "application/json" } }
     context "ユーザーがログインしていない場合" do
       let!(:user) { FactoryBot.create(:user) }
       it "ステータスコード403 (forbidden) が返されること" do
@@ -201,8 +203,8 @@ RSpec.describe "Users", type: :request do
           post "/api/v1/login", params: { session: {
             email: user.email,
             password: user.password,
-            remember_me: "0"
-          } }
+            remember_me: false
+          } }.to_json, headers: headers
           patch "/api/v1/users/#{user.id}", params: { user: {
             name: user.name.insert(8, "Update "),
             email: user.email.sub(/user/, "update-user"),
@@ -215,8 +217,8 @@ RSpec.describe "Users", type: :request do
           post "/api/v1/login", params: { session: {
             email: user.email,
             password: user.password,
-            remember_me: "0"
-          } }
+            remember_me: false
+          } }.to_json, headers: headers
           patch "/api/v1/users/#{user.id}", params: { user: {
             name: user.name.insert(8, "Update "),
             email: user.email.sub(/user/, "update-user"),
@@ -233,8 +235,8 @@ RSpec.describe "Users", type: :request do
           post "/api/v1/login", params: { session: {
             email: user.email,
             password: user.password,
-            remember_me: "0"
-          } }
+            remember_me: false
+          } }.to_json, headers: headers
           patch "/api/v1/users/#{user.id}", params: { user: {
             name: user.name.split(/\s/).first,
             email: user.email.sub(/@/, "_"),
@@ -247,8 +249,8 @@ RSpec.describe "Users", type: :request do
           post "/api/v1/login", params: { session: {
             email: user.email,
             password: user.password,
-            remember_me: "0"
-          } }
+            remember_me: false
+          } }.to_json, headers: headers
           patch "/api/v1/users/#{user.id}", params: { user: {
             name: user.name.split(/\s/).first,
             email: user.email.sub(/@/, "_"),
@@ -267,8 +269,8 @@ RSpec.describe "Users", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         patch "/api/v1/users/#{another_user.id}", params: { user: {
           name: another_user.name.insert(8, "Update "),
           email: another_user.email.sub(/another-user/, "update-another-user"),
@@ -281,8 +283,8 @@ RSpec.describe "Users", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         patch "/api/v1/users/#{another_user.id}", params: { user: {
           name: another_user.name.insert(8, "Update "),
           email: another_user.email.sub(/another-user/, "update-another-user"),

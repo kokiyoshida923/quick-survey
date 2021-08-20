@@ -175,9 +175,9 @@ export default {
         this.loader = 'loading'
         const userRememberMe = document.getElementById('userRememberMe')
         if (userRememberMe.checked) {
-          this.user.remember_me = '1'
+          this.user.remember_me = true
         } else {
-          this.user.remember_me = '0'
+          this.user.remember_me = false
         }
         const response = await this.$axios.$post('/api/v1/login', {
           session: {

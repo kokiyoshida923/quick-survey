@@ -19,7 +19,7 @@ module Api
         if unauth_user.valid?
           auth_user = User.find_by(email: params[:session][:email].downcase)
           session[:user_id] = auth_user.id
-          params[:session][:remember_me] == "1" ? remember(auth_user) : forget(auth_user)
+          params[:session][:remember_me] == true ? remember(auth_user) : forget(auth_user)
           render json: { auth_user: auth_user }
         else
           errors = unauth_user.errors.full_messages
