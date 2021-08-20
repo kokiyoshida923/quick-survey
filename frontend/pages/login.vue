@@ -73,6 +73,8 @@
             <v-card-actions>
               <v-btn
                 class="my-4 grey--text text--lighten-4 font-weight-bold"
+                v-bind:loading="loading"
+                v-bind:disabled="loading"
                 v-bind:ripple="false"
                 color="cyan darken-3"
                 block
@@ -136,11 +138,20 @@ export default {
         eye: { mdiEye: mdiEye },
         eyeOff: { mdiEyeOff: mdiEyeOff },
       },
+      loading: false,
+      loader: null,
       showEmailError: false,
       showPasswordError: false,
       showLoginPassword: false,
       loginUserErrors: {},
     }
+  },
+  watch: {
+    loader: function () {
+      const l = this.loader
+      this[l] = !this[l]
+      this.loader = null
+    },
   },
   methods: {
     errorHandler: function (errors, label) {
@@ -161,6 +172,7 @@ export default {
     },
     loginUser: async function () {
       try {
+        this.loader = 'loading'
         const userRememberMe = document.getElementById('userRememberMe')
         if (userRememberMe.checked) {
           this.user.remember_me = '1'
@@ -183,12 +195,16 @@ export default {
           })
           this.$router.push('/users/' + response.auth_user.id)
         } else if (response.errors) {
+          const that = this
           this.$store.dispatch('message/flashMessage', {
             isAlert: true,
             alertType: 'error',
             alertMessage: 'ログインに失敗しました',
           })
           this.loginUserErrors = response.errors
+          setTimeout(function () {
+            that.loading = false
+          }, 1000)
         }
       } catch (e) {
         this.$store.dispatch('message/flashMessage', {

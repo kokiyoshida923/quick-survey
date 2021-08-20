@@ -122,6 +122,8 @@
           <v-card-actions>
             <v-btn
               class="my-4 grey--text text--lighten-4 font-weight-bold"
+              v-bind:loading="loading"
+              v-bind:disabled="loading"
               v-bind:ripple="false"
               color="cyan darken-3"
               block
@@ -234,6 +236,8 @@ export default {
         eye: { madEye: mdiEye },
         eyeOff: { mdiEyeOff: mdiEyeOff },
       },
+      loading: false,
+      loader: null,
       showNameError: false,
       showEmailError: false,
       showPasswordError: false,
@@ -242,6 +246,13 @@ export default {
       showUserPasswordConfirmation: false,
       updateUserErrors: {},
     }
+  },
+  watch: {
+    loader: function () {
+      const l = this.loader
+      this[l] = !this[l]
+      this.loader = null
+    },
   },
   methods: {
     errorHandler: function (errors, label) {
@@ -274,6 +285,7 @@ export default {
     },
     updateUser: async function () {
       try {
+        this.loader = 'loading'
         const response = await this.$axios.$patch(
           '/api/v1/users/' + this.user.id,
           {
@@ -294,12 +306,16 @@ export default {
           this.$emit('assign-updated-user', response.user)
           this.$router.push('/users/' + response.user.id)
         } else {
+          const that = this
           this.$store.dispatch('message/flashMessage', {
             isAlert: true,
             alertType: 'error',
             alertMessage: 'ユーザー更新に失敗しました',
           })
           this.updateUserErrors = response.errors
+          setTimeout(function () {
+            that.loading = false
+          }, 1000)
         }
       } catch (e) {
         this.$store.dispatch('message/flashMessage', {

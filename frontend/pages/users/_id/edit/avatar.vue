@@ -63,6 +63,8 @@
             </ValidationProvider>
             <v-btn
               class="my-4 grey--text text--lighten-4 font-weight-bold"
+              v-bind:loading="loading"
+              v-bind:disabled="loading"
               v-bind:ripple="false"
               type="submit"
               color="cyan darken-3"
@@ -133,10 +135,19 @@ export default {
       userEditAvatarIcon: {
         avatar: { mdiCamera: mdiCamera },
       },
+      loading: false,
+      loader: null,
       fileLoading: false,
       uploadFile: null,
       updateUserAvatarErrors: {},
     }
+  },
+  watch: {
+    loader: function () {
+      const l = this.loader
+      this[l] = !this[l]
+      this.loader = null
+    },
   },
   methods: {
     handleFileChange: async function (file, validate) {
@@ -192,6 +203,7 @@ export default {
     },
     updateUserAvatar: async function () {
       try {
+        this.loader = 'loading'
         const formData = new FormData()
         formData.append('user[avatar]', this.uploadFile)
         const config = {
@@ -213,12 +225,16 @@ export default {
           this.$emit('assign-updated-user', response.user)
           this.$router.push('/users/' + response.user.id)
         } else {
+          const that = this
           this.$store.dispatch('message/flashMessage', {
             isAlert: true,
             alertType: 'error',
             alertMessage: 'ユーザーアバター更新に失敗しました',
           })
           this.updateUserAvatarErrors = response.errors
+          setTimeout(function () {
+            that.loading = false
+          }, 1000)
         }
       } catch (e) {
         this.$store.dispatch('message/flashMessage', {
