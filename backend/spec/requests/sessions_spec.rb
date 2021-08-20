@@ -59,6 +59,7 @@ RSpec.describe "Sessions", type: :request do
 
   describe "'/login'にPOSTメソッドでリクエストを送信" do
     let!(:unauth_user) { FactoryBot.build(:unauth_user) }
+    let!(:headers) { { "Content-Type" => "application/json" } }
     context "パラメータが妥当かつ「ログイン情報を保存する」をチェックする場合" do
       let!(:user) { FactoryBot.create(:user) }
       before do
@@ -69,24 +70,24 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
           password: @valid_password,
-          remember_me: "1"
-        } }
+          remember_me: true
+        } }.to_json, headers: headers
         expect(response.status).to eq 200
       end
       it "cookieに一時的な暗号化済みのユーザーIDが生成されること" do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
           password: @valid_password,
-          remember_me: "1"
-        } }
+          remember_me: true
+        } }.to_json, headers: headers
         expect(session[:user_id].blank?).to be_falsey
       end
       it "cookieに永続的な暗号化済みのユーザーIDと永続的な暗号化済みの記憶トークンが生成されること" do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
           password: @valid_password,
-          remember_me: "1"
-        } }
+          remember_me: true
+        } }.to_json, headers: headers
         expect(cookies.permanent.signed[:user_id].blank?).to be_falsey
         expect(cookies.permanent[:remember_token].blank?).to be_falsey
       end
@@ -94,8 +95,8 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
           password: @valid_password,
-          remember_me: "1"
-        } }
+          remember_me: true
+        } }.to_json, headers: headers
         auth_user = User.find(user.id)
         expect(auth_user.remember_digest.nil?).to be_falsey
       end
@@ -103,8 +104,8 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
           password: @valid_password,
-          remember_me: "1"
-        } }
+          remember_me: true
+        } }.to_json, headers: headers
         json = JSON.parse(response.body)
         expect(json["auth_user"]["id"]).to eq(user.id)
       end
@@ -119,24 +120,24 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
           password: @valid_password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         expect(response.status).to eq 200
       end
       it "cookieに一時的な暗号化済みのユーザーIDが生成されること" do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
           password: @valid_password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         expect(session[:user_id].blank?).to be_falsey
       end
       it "cookieに永続的な暗号化済みのユーザーIDと永続的な暗号化済みの記憶トークンが生成されないこと" do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
           password: @valid_password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         expect(cookies.permanent.signed[:user_id].blank?).to be_truthy
         expect(cookies.permanent[:remember_token].blank?).to be_truthy
       end
@@ -144,8 +145,8 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
           password: @valid_password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         auth_user = User.find(user.id)
         expect(auth_user.remember_digest.nil?).to be_truthy
       end
@@ -153,8 +154,8 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: @valid_email,
           password: @valid_password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         json = JSON.parse(response.body)
         expect(json["auth_user"]["id"]).to eq(user.id)
       end
@@ -184,13 +185,14 @@ RSpec.describe "Sessions", type: :request do
 
   describe "'/logout'にDELETEメソッドでリクエストを送信" do
     let!(:user) { FactoryBot.create(:user) }
+    let!(:headers) { { "Content-Type" => "application/json" } }
     context "「ログイン情報を保存する」にチェックしてログインした既認証ユーザーがログアウトした場合" do
       it "ステータスコード204 (no content) が返されること" do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "1"
-        } }
+          remember_me: true
+        } }.to_json, headers: headers
         delete "/api/v1/logout"
         expect(response.status).to eq 204
       end
@@ -198,8 +200,8 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "1"
-        } }
+          remember_me: true
+        } }.to_json, headers: headers
         delete "/api/v1/logout"
         expect(session[:user_id].blank?).to be_truthy
       end
@@ -207,8 +209,8 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "1"
-        } }
+          remember_me: true
+        } }.to_json, headers: headers
         delete "/api/v1/logout"
         expect(cookies.permanent.signed[:user_id].blank?).to be_truthy
         expect(cookies.permanent[:remember_token].blank?).to be_truthy
@@ -217,8 +219,8 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "1"
-        } }
+          remember_me: true
+        } }.to_json, headers: headers
         delete "/api/v1/logout"
         unauth_user = User.find(user.id)
         expect(unauth_user.remember_digest.nil?).to be_truthy
@@ -227,8 +229,8 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "1"
-        } }
+          remember_me: true
+        } }.to_json, headers: headers
         delete "/api/v1/logout"
         expect(session[:user_id].blank?).to be_truthy
         delete "/api/v1/logout"
@@ -240,8 +242,8 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         delete "/api/v1/logout"
         expect(response.status).to eq 204
       end
@@ -249,8 +251,8 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         delete "/api/v1/logout"
         expect(session[:user_id].blank?).to be_truthy
       end
@@ -258,8 +260,8 @@ RSpec.describe "Sessions", type: :request do
         post "/api/v1/login", params: { session: {
           email: user.email,
           password: user.password,
-          remember_me: "0"
-        } }
+          remember_me: false
+        } }.to_json, headers: headers
         delete "/api/v1/logout"
         expect(session[:user_id].blank?).to be_truthy
         delete "/api/v1/logout"
