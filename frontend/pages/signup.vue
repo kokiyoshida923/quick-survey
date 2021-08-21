@@ -278,7 +278,7 @@ export default {
             alertMessage: 'ユーザー作成に成功しました',
           })
           this.$router.push('/users/' + response.user.id)
-        } else {
+        } else if (response.errors) {
           const that = this
           this.$store.dispatch('message/flashMessage', {
             isAlert: true,

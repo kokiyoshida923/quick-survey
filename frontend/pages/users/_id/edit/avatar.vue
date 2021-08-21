@@ -224,7 +224,7 @@ export default {
           })
           this.$emit('assign-updated-user', response.user)
           this.$router.push('/users/' + response.user.id)
-        } else {
+        } else if (response.errors) {
           const that = this
           this.$store.dispatch('message/flashMessage', {
             isAlert: true,
