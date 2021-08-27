@@ -1,8 +1,13 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :logged_in_user, only: [:edit, :update]
+      before_action :logged_in_user, only: [:index, :edit, :update]
       before_action :correct_user, only: [:edit, :update]
+
+      def index
+        users = User.all.order(created_at: :DESC)
+        render json: { users: users }
+      end
 
       def show
         user = User.find(params[:id])
