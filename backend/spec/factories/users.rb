@@ -12,4 +12,11 @@ FactoryBot.define do
     password { "password" }
     password_confirmation { "password" }
   end
+
+  factory :users, class: User do
+    name { Faker::Internet.unique.username(specifier: 6..20, separators: %w[. _ -]) }
+    email { Faker::Internet.unique.email(name: "users") }
+    password { "password" }
+    password_confirmation { "password" }
+  end
 end

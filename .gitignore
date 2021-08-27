@@ -12,6 +12,8 @@
 /backend/byebug_history
 /backend/config/master.
 /backend/.env
+/backend/public/uploads_development
+/backend/public/seed_development
 
 #frontend
 /frontend/logs

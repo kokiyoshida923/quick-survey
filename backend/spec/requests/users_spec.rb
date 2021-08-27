@@ -1,6 +1,44 @@
 require "rails_helper"
 
 RSpec.describe "Users", type: :request do
+  describe "'/users'にGETメソッドでリクエストを送信" do
+    context "ユーザーがログインしていない場合" do
+      it "ステータスコード403 (forbidden) が返されること" do
+        get "/api/v1/users"
+        expect(response.status).to eq 403
+      end
+      it "エラーメッセージがJSON形式で返されること" do
+        get "/api/v1/users"
+        json = JSON.parse(response.body)
+        expect(json["message"]).to eq("ユーザーがログインしていません")
+      end
+    end
+    context "ユーザーがログインしている場合" do
+      let!(:headers) { { "Content-Type" => "application/json" } }
+      let!(:user) { FactoryBot.create(:user) }
+      let!(:users) { FactoryBot.create_list(:users, 50) }
+      it "ステータスコード200(ok)が返されること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password,
+          remember_me: false
+        } }.to_json, headers: headers
+        get "/api/v1/users"
+        expect(response.status).to eq 200
+      end
+      it "全てのユーザーがJSON形式で返されること" do
+        post "/api/v1/login", params: { session: {
+          email: user.email,
+          password: user.password,
+          remember_me: false
+        } }.to_json, headers: headers
+        get "/api/v1/users"
+        json = JSON.parse(response.body)
+        expect(json["users"].length).to eq(User.all.length)
+      end
+    end
+  end
+
   describe "'/users/:id'にGETメソッドでリクエストを送信" do
     let!(:user) { FactoryBot.create(:user) }
     it "ステータスコード200 (ok) が返されること" do
