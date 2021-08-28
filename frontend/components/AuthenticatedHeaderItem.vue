@@ -69,25 +69,38 @@
           </v-hover>
         </template>
         <v-list class="mt-1" dense nav>
+          <v-list-item v-bind:to="'/users/' + authUser.id" exact>
+            <v-list-item-icon>
+              <v-icon v-text="authenticatedHeaderUser.icon.mdiAccount"></v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>{{ authUser.name }}</v-list-item-title>
+              <v-list-item-subtitle class="text-caption">
+                自分のページへ移動
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item v-bind:to="'/users/' + authUser.id + '/edit'" exact>
+            <v-list-item-icon>
+              <v-icon
+                v-text="authenticatedHeaderUserEdit.icon.mdiAccountEdit"
+              ></v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>アカウント設定</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item
-            v-for="authenticatedHeaderItemList in authenticatedHeaderItemLists"
-            v-bind:key="authenticatedHeaderItemList.name"
-            v-bind:to="authenticatedHeaderItemList.link"
+            v-bind:to="'/users/' + authUser.id + '/edit/avatar'"
             exact
           >
             <v-list-item-icon>
               <v-icon
-                v-text="Object.values(authenticatedHeaderItemList.icon)[0]"
+                v-text="authenticatedHeaderUserEditAvatar.icon.mdiImage"
               ></v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title
-                v-text="authenticatedHeaderItemList.title"
-              ></v-list-item-title>
-              <v-list-item-subtitle
-                class="text-caption"
-                v-text="authenticatedHeaderItemList.subtitle"
-              ></v-list-item-subtitle>
+              <v-list-item-title>アバター設定</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-divider class="my-3"></v-divider>
@@ -120,6 +133,15 @@ export default {
       authenticatedHeaderUsers: {
         icon: { mdiAccountBoxMultipleOutline: mdiAccountBoxMultipleOutline },
       },
+      authenticatedHeaderUser: {
+        icon: { mdiAccount: mdiAccount },
+      },
+      authenticatedHeaderUserEdit: {
+        icon: { mdiAccountEdit: mdiAccountEdit },
+      },
+      authenticatedHeaderUserEditAvatar: {
+        icon: { mdiImage: mdiImage },
+      },
       authenticatedHeaderLogout: {
         icon: { mdiLogout: mdiLogout },
       },
@@ -128,30 +150,6 @@ export default {
   computed: {
     authUser: function () {
       return this.$store.state.authentication.authUser
-    },
-    authenticatedHeaderItemLists: function () {
-      return [
-        {
-          title: this.$store.state.authentication.authUser.name,
-          subtitle: '自分のページへ移動',
-          link: '/users/' + this.$store.state.authentication.authUser.id,
-          icon: { mdiAccount: mdiAccount },
-        },
-        {
-          title: 'アカウント設定',
-          link:
-            '/users/' + this.$store.state.authentication.authUser.id + '/edit',
-          icon: { mdiAccountEdit: mdiAccountEdit },
-        },
-        {
-          title: 'アバター設定',
-          link:
-            '/users/' +
-            this.$store.state.authentication.authUser.id +
-            '/edit/avatar',
-          icon: { mdiImage: mdiImage },
-        },
-      ]
     },
   },
   methods: {
