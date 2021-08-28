@@ -98,9 +98,7 @@
               ></v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title
-                v-text="authenticatedHeaderLogout.title"
-              ></v-list-item-title>
+              <v-list-item-title>ログアウト</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -125,7 +123,6 @@ export default {
         icon: { mdiAccountBoxMultipleOutline: mdiAccountBoxMultipleOutline },
       },
       authenticatedHeaderLogout: {
-        title: 'ログアウト',
         icon: { mdiLogout: mdiLogout },
       },
     }
