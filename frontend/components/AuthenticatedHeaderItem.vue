@@ -7,10 +7,8 @@
         flat
       >
         <router-link to="/users" exact>
-          <v-icon
-            class="grey--text text--lighten-4"
-            v-text="authenticatedHeaderUsers.icon.mdiAccountBoxMultipleOutline"
-          >
+          <v-icon class="grey--text text--lighten-4">
+            {{ authenticatedHeaderUsers.icon.mdiAccountBoxMultipleOutline }}
           </v-icon>
         </router-link>
       </v-card>
