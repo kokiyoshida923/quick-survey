@@ -93,9 +93,7 @@
           <v-divider class="my-3"></v-divider>
           <v-list-item v-on:click="logoutUser()">
             <v-list-item-icon>
-              <v-icon
-                v-text="authenticatedHeaderLogout.icon.mdiLogout"
-              ></v-icon>
+              <v-icon>{{ authenticatedHeaderLogout.icon.mdiLogout }}</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>ログアウト</v-list-item-title>
