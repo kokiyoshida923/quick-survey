@@ -120,11 +120,11 @@
 
 <script>
 import {
-  mdiLogout,
   mdiAccount,
+  mdiAccountBoxMultipleOutline,
   mdiAccountEdit,
   mdiImage,
-  mdiAccountBoxMultipleOutline,
+  mdiLogout,
 } from '@mdi/js'
 
 export default {
