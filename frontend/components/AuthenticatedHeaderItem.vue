@@ -71,7 +71,7 @@
         <v-list class="mt-1" dense nav>
           <v-list-item v-bind:to="'/users/' + authUser.id" exact>
             <v-list-item-icon>
-              <v-icon v-text="authenticatedHeaderUser.icon.mdiAccount"></v-icon>
+              <v-icon>{{ authenticatedHeaderUser.icon.mdiAccount }}</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>{{ authUser.name }}</v-list-item-title>
@@ -82,9 +82,9 @@
           </v-list-item>
           <v-list-item v-bind:to="'/users/' + authUser.id + '/edit'" exact>
             <v-list-item-icon>
-              <v-icon
-                v-text="authenticatedHeaderUserEdit.icon.mdiAccountEdit"
-              ></v-icon>
+              <v-icon>
+                {{ authenticatedHeaderUserEdit.icon.mdiAccountEdit }}
+              </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>アカウント設定</v-list-item-title>
@@ -95,9 +95,9 @@
             exact
           >
             <v-list-item-icon>
-              <v-icon
-                v-text="authenticatedHeaderUserEditAvatar.icon.mdiImage"
-              ></v-icon>
+              <v-icon>
+                {{ authenticatedHeaderUserEditAvatar.icon.mdiImage }}
+              </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>アバター設定</v-list-item-title>
