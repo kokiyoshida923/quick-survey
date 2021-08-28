@@ -6,7 +6,7 @@
         class="grey darken-4 mr-3"
         flat
       >
-        <router-link v-bind:to="authenticatedHeaderUsers.link" exact>
+        <router-link to="/users" exact>
           <v-icon
             class="grey--text text--lighten-4"
             v-text="authenticatedHeaderUsers.icon.mdiAccountBoxMultipleOutline"
@@ -27,7 +27,7 @@
               font-weight-bold
               text-decoration-none
             "
-            v-bind:to="authenticatedHeaderUsers.link"
+            to="/users"
             v-bind:style="hover ? { opacity: 0.8 } : {}"
             exact
           >
@@ -124,7 +124,6 @@ export default {
   data: function () {
     return {
       authenticatedHeaderUsers: {
-        link: '/users',
         icon: { mdiAccountBoxMultipleOutline: mdiAccountBoxMultipleOutline },
       },
       authenticatedHeaderLogout: {
