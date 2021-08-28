@@ -2,41 +2,40 @@
   <v-container>
     <v-row>
       <v-col class="mx-auto" cols="12" md="10" lg="8" xl="6">
-        <v-list v-if="users.length > 0" elevation="3" outlined>
-          <template v-for="(user, index) in users">
-            <v-list-item
-              v-bind:key="user.id"
-              v-bind:to="'/users/' + user.id"
-              exact
-            >
-              <v-list-item-avatar
-                v-if="!(nodeEnv === 'production')"
-                v-bind:class="[
-                  user.avatar.url === '/images/fallback/default.png'
-                    ? 'grey lighten-2'
-                    : 'blue-grey lighten-2',
-                ]"
-                size="64"
-              >
-                <v-img
-                  v-bind:src="$config.axios.browserBaseURL + user.avatar.url"
-                  v-bind:style="
+        <v-card
+          v-for="user in users"
+          v-bind:key="user.id"
+          class="my-4"
+          elevation="4"
+        >
+          <div class="d-flex align-center">
+            <v-card-title>
+              <router-link v-bind:to="'/users/' + user.id" exact>
+                <v-avatar
+                  v-if="!(nodeEnv === 'production')"
+                  v-bind:class="[
                     user.avatar.url === '/images/fallback/default.png'
-                      ? { 'max-width': '90%', 'max-height': '90%' }
-                      : ''
-                  "
-                ></v-img>
-              </v-list-item-avatar>
-              <v-list-item-content class="py-4">
-                {{ user.name }}
-              </v-list-item-content>
-            </v-list-item>
-            <v-divider
-              v-if="index < users.length - 1"
-              v-bind:key="user.id + 'divider'"
-            ></v-divider>
-          </template>
-        </v-list>
+                      ? 'grey lighten-2'
+                      : 'blue-grey lighten-2',
+                  ]"
+                  size="64"
+                >
+                  <v-img
+                    v-bind:src="$config.axios.browserBaseURL + user.avatar.url"
+                    v-bind:style="
+                      user.avatar.url === '/images/fallback/default.png'
+                        ? { 'max-width': '90%', 'max-height': '90%' }
+                        : ''
+                    "
+                  ></v-img>
+                </v-avatar>
+              </router-link>
+            </v-card-title>
+            <v-card-text class="pb-0">
+              {{ user.name }}
+            </v-card-text>
+          </div>
+        </v-card>
       </v-col>
     </v-row>
     <infinite-loading
