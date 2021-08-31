@@ -44,7 +44,7 @@
         <template v-slot:activator="{ on }">
           <v-hover v-slot="{ hover }">
             <v-avatar
-              v-if="!($store.state.nodeEnv === 'production')"
+              v-if="!(nodeEnv === 'production')"
               v-bind:class="[
                 authUser.avatar.url === '/images/fallback/default.png'
                   ? 'grey lighten-2'
@@ -148,6 +148,9 @@ export default {
     }
   },
   computed: {
+    nodeEnv: function () {
+      return this.$store.state.nodeEnv
+    },
     authUser: function () {
       return this.$store.state.authentication.authUser
     },

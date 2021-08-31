@@ -9,7 +9,7 @@
 
       <v-card-title>
         <v-avatar
-          v-if="!($store.state.nodeEnv === 'production')"
+          v-if="!(nodeEnv === 'production')"
           v-bind:class="[
             user.avatar.url === '/images/fallback/default.png'
               ? 'grey lighten-2'
@@ -141,6 +141,11 @@ export default {
       uploadFile: null,
       updateUserAvatarErrors: {},
     }
+  },
+  computed: {
+    nodeEnv: function () {
+      return this.$store.state.nodeEnv
+    },
   },
   watch: {
     loader: function () {
