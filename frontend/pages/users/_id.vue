@@ -5,7 +5,7 @@
         <v-card>
           <v-card-title class="d-flex flex-column justify-center">
             <v-avatar
-              v-if="!($store.state.nodeEnv === 'production')"
+              v-if="!(nodeEnv === 'production')"
               v-bind:class="[
                 user.avatar.url === '/images/fallback/default.png'
                   ? 'grey lighten-2'
@@ -42,6 +42,11 @@ export default {
     return {
       user: response.user,
     }
+  },
+  computed: {
+    nodeEnv: function () {
+      return this.$store.state.nodeEnv
+    },
   },
   methods: {
     assignUpdatedUser: function (updatedUser) {
