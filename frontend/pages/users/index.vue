@@ -31,30 +31,39 @@
                 </v-avatar>
               </router-link>
             </v-card-title>
-            <v-card-text class="pb-0">
+            <v-card-text class="text-left pb-0">
               {{ user.name }}
             </v-card-text>
           </div>
         </v-card>
+        <div v-infinite-scroll="infiniteHandler"></div>
+        <template v-if="loadingFlag">
+          <v-progress-circular
+            class="text-center"
+            color="grey darken-1"
+            indeterminate
+            size="25"
+            width="3"
+          ></v-progress-circular>
+        </template>
       </v-col>
     </v-row>
-    <infinite-loading
-      v-bind:distance="500"
-      spinner="default"
-      v-on:infinite="infiniteHandler"
-    >
-      <div slot="no-more" class="mt-5">これ以上結果がありません</div>
-      <div slot="no-results" class="mt-5">結果がありません</div>
-    </infinite-loading>
   </v-container>
 </template>
 
 <script>
-import InfiniteLoading from 'vue-infinite-loading'
-
 export default {
-  components: {
-    InfiniteLoading: InfiniteLoading,
+  directives: {
+    'infinite-scroll': {
+      inserted: function (el, binding) {
+        const f = function (event) {
+          if (binding.value(event, el)) {
+            window.removeEventListener('scroll', f)
+          }
+        }
+        window.addEventListener('scroll', f)
+      },
+    },
   },
   middleware: async function (context) {
     try {
@@ -85,6 +94,10 @@ export default {
   data: function () {
     return {
       users: [],
+      start: 0,
+      end: 20,
+      bottomPoint: null,
+      loadingFlag: false,
     }
   },
   computed: {
@@ -92,29 +105,47 @@ export default {
       return this.$store.state.nodeEnv
     },
   },
+  mounted: function () {
+    this.getUsers().then(() => {
+      const bodyHeight = document.body.clientHeight
+      const windowHeight = window.innerHeight
+      this.bottomPoint = bodyHeight - windowHeight
+    })
+  },
   methods: {
-    infiniteHandler: function ($state) {
-      const that = this
-      const topPosition = this.users.length
-      let bottomPosition = this.users.length + 20
+    infiniteHandler: function (event, el) {
+      if (this.end === this.fetchedUsers.length) return true
 
-      if (this.fetchedUsers.length === this.users.length)
-        return $state.complete()
+      if (window.pageYOffset === this.bottomPoint) {
+        this.getUsers().then(() => {
+          const bodyHeight = document.body.clientHeight
+          const windowHeight = window.innerHeight
+          this.bottomPoint = bodyHeight - windowHeight
+        })
+      }
+    },
+    getUsers: function () {
+      return new Promise((resolve) => {
+        this.loadingFlag = true
 
-      setTimeout(function () {
-        if (that.fetchedUsers.length - bottomPosition > 0) {
-          for (let i = topPosition; i < bottomPosition; i++) {
-            that.users.push(that.fetchedUsers[i])
+        setTimeout(() => {
+          if (this.fetchedUsers.length - this.end > 0) {
+            for (let i = this.start; i < this.end; i++) {
+              this.users.push(this.fetchedUsers[i])
+            }
+            this.start = this.start + 20
+            this.end = this.end + 20
+            resolve()
+          } else {
+            this.end = this.fetchedUsers.length
+            for (let i = this.start; i < this.end; i++) {
+              this.users.push(this.fetchedUsers[i])
+            }
+            resolve()
           }
-          $state.loaded()
-        } else {
-          bottomPosition = that.fetchedUsers.length
-          for (let i = topPosition; i < bottomPosition; i++) {
-            that.users.push(that.fetchedUsers[i])
-          }
-          $state.loaded()
-        }
-      }, 1500)
+          this.loadingFlag = false
+        }, 1500)
+      })
     },
   },
 }
